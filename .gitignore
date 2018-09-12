@@ -1,0 +1,14 @@
+.DS_Store
+node_modules/
+dist/
+static/
+src/**/*.js
+config/index.js
+npm-debug.log
+index.js
+src/**/*.js
+.idea/*
+keycloak-auth: static content
+*.log
+.idea/
+uploads/
