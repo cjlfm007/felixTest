@@ -70,7 +70,7 @@ describe('New Campaign Form Test', function() {
         cy.get('.app-dialog--header').should('not.exist');
 
     })
-    it.only('Test New Campaign Form Save Button Display As External User', function() {
+    it('Test New Campaign Form Save Button Display As External User', function() {
         cy.loginAsExternal();
         cy.url().should('include',"/campaigns");
         cy.contains('span', "New Campaign");

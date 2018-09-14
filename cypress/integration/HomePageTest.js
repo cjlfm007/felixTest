@@ -7,15 +7,17 @@ describe('Home Page Test', function() {
         cy.get('#search-input').type("test input").should('have.value','test input');
 
     });
-    it('Test if search results contain keyword', function() {
+    it.only('Test if search results contain keyword', function() {
       cy.visit("https://app-qa.inpwrd.net/campaigns");
       cy.get('#username').type("fangming.lu@inpwrd.com").should('have.value',"fangming.lu@inpwrd.com");
       cy.get('#password').type("Welcome1");
       cy.get('#login-btn').click();
       cy.url().should('include',"/campaigns");
       cy.get('#search-input').type("test 09");
-      cy.get('tbody td:nth-child(2)').each(($li,index,$list) => {
-            expect($li).to.contain('test 09');
+      cy.get('tbody td:nth-child(2)').each((index,$list) => {
+            if(index >= 2){
+                expect($list).to.contain('test 09');
+            }
      });
     })
     it('Test if Campaign Status filter works correctly', function() {
