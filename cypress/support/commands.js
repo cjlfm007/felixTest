@@ -53,7 +53,9 @@ Cypress.Commands.add('fillAdminForm', (random) => {
     cy.get('.mat-option-text').contains('Auto').click();
     cy.get('#settings-salesforceOpportunityId-input').type('test salesforce id ' + random);
     cy.get('#settings-brandName-input').type('test brand');
+    cy.route('POST','**/campaigns/?isDraft=true').as('postNewCampaign');
     cy.get('#settings-save-button').click();
+    cy.wait(['@postNewCampaign']);
 })
 Cypress.Commands.add('fillExternalForm', (random) => {
     cy.get('#campaigns-new-button').click();
@@ -63,22 +65,74 @@ Cypress.Commands.add('fillExternalForm', (random) => {
     cy.get('#settings-account-select').click();
     cy.get('.mat-option-text').contains('test customer1').click();
     cy.get('#settings-brandName-input').type('test brand');
+    cy.server();
+    cy.route('POST','**/campaigns/?isDraft=true').as('postNewCampaign');
     cy.get('#settings-save-button').click();
+    cy.wait(['@postNewCampaign']);
+})
+Cypress.Commands.add('addStory',() => {
+    cy.server();
+    cy.get('#story-add-url-input').type('yahoo.com');
+    cy.get('#story-add-url-input').type('{enter}');
+    cy.route('GET','**?includeDraft=true').as('getNewCampaign');
+    cy.get('#story-0-save-button').click();
+    cy.wait(['@getNewCampaign'],{timeout: 10000});
+})
+Cypress.Commands.add('fillTarget',() => {
+    cy.get('#campaign-targeting-tab').click();
+    cy.get('#add-channel-button > .mat-button-wrapper').click();
+    cy.get('#select-channel-button-yahoo').click();
+    cy.server();
+    cy.get('.app-campaign-targeting-story > .AGE > .target-wrapper > .target > mat-select-trigger').click();
+    cy.route('PUT','**?isDraft=true&lumpZemantaTargets=true').as('getTarget');
+    cy.contains('18 - 24').click();
+    cy.get('body').type('{esc}');
+    cy.wait(['@getTarget']);
+    cy.get('.app-campaign-targeting-story > .DEVICES > .target-wrapper > .target > mat-select-trigger').click();
+    cy.route('PUT','**?isDraft=true&lumpZemantaTargets=true').as('getTarget');
+    cy.contains('Smartphones').click();
+    cy.get('body').type('{esc}');
+    cy.wait(['@getTarget']);
+    cy.get('.app-campaign-targeting-story > .GENDER > .target-wrapper > .target > mat-select-trigger').click();
+    cy.route('PUT','**?isDraft=true&lumpZemantaTargets=true').as('getTarget');
+    cy.contains('Male').click();
+    cy.get('body').type('{esc}');
+    cy.wait(['@getTarget']);
+    cy.get('#targeting-story-0-target-geos').type('united states');
+    cy.route('PUT','**?isDraft=true&lumpZemantaTargets=true').as('getTarget');
+    cy.contains('United States (Yahoo)').click();
+    cy.get('body').type('{esc}');
+    cy.wait(['@getTarget']);
+    cy.get('#targeting-story-0-target-interestss').type('Sports');
+    cy.route('PUT','**?isDraft=true&lumpZemantaTargets=true').as('getTarget');
+    cy.contains('Sports (Yahoo)').click();
+    cy.get('body').type('{esc}');
+    cy.wait(['@getTarget']);
+    cy.get('.app-campaign-targeting-story > .LANGUAGES > .target-wrapper > .target > mat-select-trigger').click();
+    cy.route('PUT','**?isDraft=true&lumpZemantaTargets=true').as('getTarget');
+    cy.contains('English').click();
+    cy.get('body').type('{esc}');
+    cy.wait(['@getTarget']);
+    cy.get('.app-campaign-targeting-story > .OS > .target-wrapper > .target > mat-select-trigger').click();
+    cy.route('PUT','**?isDraft=true&lumpZemantaTargets=true').as('getTarget');
+    cy.contains('iOS').click();
+    cy.get('body').type('{esc}');
+    cy.wait(['@getTarget']);
 })
 Cypress.Commands.add('loginAsAdmin', () => {
-    cy.visit("https://app-qa.inpwrd.net/campaigns");
+    cy.visit("https://app-qa.inpwrd.net/");
     cy.get('#username').type(types["admin"].username).should('have.value',types["admin"].username);
     cy.get('#password').type(types["admin"].password);
     cy.get('#login-btn').click();
 })
 Cypress.Commands.add('loginAsExternal', () => {
-    cy.visit("https://app-qa.inpwrd.net/campaigns");
+    cy.visit("https://app-qa.inpwrd.net/");
     cy.get('#username').type(types["externaluser"].username).should('have.value',types["externaluser"].username);
     cy.get('#password').type(types["externaluser"].password);
     cy.get('#login-btn').click();
 })
 Cypress.Commands.add('loginAsAnalyst', () => {
-    cy.visit("https://app-qa.inpwrd.net/campaigns");
+    cy.visit("https://app-qa.inpwrd.net/");
     cy.get('#username').type(types["analystuser"].username).should('have.value',types["analystuser"].username);
     cy.get('#password').type(types["analystuser"].password);
     cy.get('#login-btn').click();
@@ -91,5 +145,18 @@ Cypress.Commands.add('validateNewCampaign', (random) => {
     cy.get('#campaign-content-tab').should('exist');
     cy.get('h1').should('have.text',"Test Campaign " + random);
 })
+/*Cypress.Commands.add('upload_file', (fileName, selector) => {
+    cy.get(selector).then(subject => {
+    cy.fixture(fileName).as("image");
+    return Cypress.Blob.base64StringToBlob(this.image, "image/jpeg").then((blob) => {
+        //then((content) => {
+            const el = subject[0]
+            const testFile = new File([blob], fileName,{type: 'image/png'})
+            const dataTransfer = new DataTransfer()
 
+            dataTransfer.items.add(testFile)
+            el.files = dataTransfer.files
+        })
+    })
+})*/
 
