@@ -24,19 +24,40 @@
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 const types = {
-    admin: {
-      username: "fangming.lu@inpwrd.com",
-      password: "Welcome1",
+    'qa': {
+        admin: {
+            username: "fangming.lu@inpwrd.com",
+            password: "Welcome1",
+        },
+        externaluser: {
+            username: "fangming.user",
+            password: "Welcome1",
+        },
+        analystuser: {
+            username: "test_analyst",
+            password: "test_analyst",
+        }
     },
-    externaluser: {
-      username: "fangming.user",
-      password: "Welcome1",
-    },
-    analystuser: {
-      username: "test_analyst",
-      password: "test_analyst",
-      }
+    'dev':{
+        admin: {
+            username: "admin_user",
+            password: "admin_user",
+          },
+          externaluser: {
+            username: "advertiser_user",
+            password: "advertiser_user",
+          },
+          analystuser: {
+            username: "analyst_user",
+            password: "analyst_user",
+        }
+    }
   }
+
+const envs = {
+    'qa' : 'https://app-qa.inpwrd.net/',
+    'dev': 'https://app-dev.inpwrd.net/'
+}  
 Cypress.Commands.add('fillAdminForm', (random) => {
     cy.server();
     cy.get('#campaigns-new-button').click();
@@ -119,22 +140,22 @@ Cypress.Commands.add('fillTarget',() => {
     cy.get('body').type('{esc}');
     cy.wait(['@getTarget']);
 })
-Cypress.Commands.add('loginAsAdmin', () => {
-    cy.visit("https://app-qa.inpwrd.net/");
-    cy.get('#username').type(types["admin"].username).should('have.value',types["admin"].username);
-    cy.get('#password').type(types["admin"].password);
+Cypress.Commands.add('loginAsAdmin', (env) => {
+    cy.visit(envs[env]);
+    cy.get('#username').type(types[env]["admin"].username).should('have.value',types[env]["admin"].username);
+    cy.get('#password').type(types[env]["admin"].password);
     cy.get('#login-btn').click();
 })
-Cypress.Commands.add('loginAsExternal', () => {
-    cy.visit("https://app-qa.inpwrd.net/");
-    cy.get('#username').type(types["externaluser"].username).should('have.value',types["externaluser"].username);
-    cy.get('#password').type(types["externaluser"].password);
+Cypress.Commands.add('loginAsExternal', (env) => {
+    cy.visit(envs[env]);
+    cy.get('#username').type(types[env]["externaluser"].username).should('have.value',types[env]["externaluser"].username);
+    cy.get('#password').type(types[env]["externaluser"].password);
     cy.get('#login-btn').click();
 })
-Cypress.Commands.add('loginAsAnalyst', () => {
-    cy.visit("https://app-qa.inpwrd.net/");
-    cy.get('#username').type(types["analystuser"].username).should('have.value',types["analystuser"].username);
-    cy.get('#password').type(types["analystuser"].password);
+Cypress.Commands.add('loginAsAnalyst', (env) => {
+    cy.visit(envs[env]);
+    cy.get('#username').type(types[env]["analystuser"].username).should('have.value',types[env]["analystuser"].username)
+    cy.get('#password').type(types[env]["analystuser"].password);
     cy.get('#login-btn').click();
 })
 
