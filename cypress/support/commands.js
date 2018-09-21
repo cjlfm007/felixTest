@@ -20,7 +20,8 @@
 // -- This is a dual command --
 // Cypress.Commands.add("dismiss", { prevSubject: 'optional'}, (subject, options) => { ... })
 //
-//
+// Test Customer (1488837880342)
+// test customer1
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 const types = {
@@ -84,12 +85,15 @@ Cypress.Commands.add('fillExternalForm', (random) => {
     cy.get('#settings-objective-select').click();
     cy.get('.mat-option-text:first').click();
     cy.get('#settings-account-select').click();
-    cy.get('.mat-option-text').contains('test customer1').click();
+    cy.get('.mat-option-text').contains('Test Customer (1488837880342)').click();
     cy.get('#settings-brandName-input').type('test brand');
     cy.server();
     cy.route('POST','**/campaigns/?isDraft=true').as('postNewCampaign');
     cy.get('#settings-save-button').click();
     cy.wait(['@postNewCampaign']);
+})
+Cypress.Commands.add('checkAnalystForm', () => {
+    cy.get('#campaigns-new-button').should('not.exist');
 })
 Cypress.Commands.add('addStory',() => {
     cy.server();
@@ -102,8 +106,10 @@ Cypress.Commands.add('addStory',() => {
 Cypress.Commands.add('fillTarget',() => {
     cy.get('#campaign-targeting-tab').click();
     cy.get('#add-channel-button > .mat-button-wrapper').click();
-    cy.get('#select-channel-button-yahoo').click();
     cy.server();
+    cy.route('GET','**/api/targets?channels=YAHOO').as('getYahoo');
+    cy.get('#select-channel-button-yahoo').click();
+    cy.wait(['@getYahoo'],{timeout: 10000});
     cy.get('.app-campaign-targeting-story > .AGE > .target-wrapper > .target > mat-select-trigger').click();
     cy.route('PUT','**?isDraft=true&lumpZemantaTargets=true').as('getTarget');
     cy.contains('18 - 24').click();
@@ -139,6 +145,7 @@ Cypress.Commands.add('fillTarget',() => {
     cy.contains('iOS').click();
     cy.get('body').type('{esc}');
     cy.wait(['@getTarget']);
+    cy.get('#selected-channel-yahoo').should('exist');
 })
 Cypress.Commands.add('loginAsAdmin', (env) => {
     cy.visit(envs[env]);
@@ -166,6 +173,22 @@ Cypress.Commands.add('validateNewCampaign', (random) => {
     cy.get('#campaign-content-tab').should('exist');
     cy.get('h1').should('have.text',"Test Campaign " + random);
 })
+
+Cypress.Commands.add('getTodayDate',() => {
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; //January is 0!
+    var yyyy = today.getFullYear();
+    if(dd<10) {
+        dd = '0'+dd
+    }
+    if(mm<10) {
+        mm = '0'+mm
+    } 
+    today = mm.toString() + '/' + dd.toString() + '/' + yyyy.toString();
+    return today;
+})
+
 /*Cypress.Commands.add('upload_file', (fileName, selector) => {
     cy.get(selector).then(subject => {
     cy.fixture(fileName).as("image");

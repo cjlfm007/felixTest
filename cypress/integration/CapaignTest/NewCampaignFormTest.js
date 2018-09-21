@@ -1,7 +1,7 @@
 describe('New Campaign Form Test', function() {
     const random = Math.floor((Math.random() * 10000) + 1);
     it('Test New Campaign Form Display As Admin', function() {
-      cy.loginAsAdmin();
+      cy.loginAsAdmin('dev');
       cy.url().should('include',"/campaigns");
       cy.contains('span', "New Campaign");
       cy.get('#campaigns-new-button').should('exist');
@@ -18,7 +18,7 @@ describe('New Campaign Form Test', function() {
     })
     it('Test New Campaign Form Display As External User', function() {
         cy.visit("https://app-qa.inpwrd.net/campaigns");
-        cy.loginAsExternal();
+        cy.loginAsExternal('dev');
         cy.url().should('include',"/campaigns");
         cy.contains('span', "New Campaign");
         cy.get('#campaigns-new-button').should('exist');
@@ -34,13 +34,13 @@ describe('New Campaign Form Test', function() {
         cy.get('#settings-save-button').should('not.exist');
     })
     it('Test New Campaign Form Display As Analyst User', function() {
-        cy.loginAsAnalyst();
+        cy.loginAsAnalyst('dev');
         cy.url().should('include',"/campaigns");
         cy.get('#campaigns-new-button').should('not.exist');
     })
     it('Test New Campaign Form Save Button Display As Admin', function() {
         cy.server();
-        cy.loginAsAdmin();
+        cy.loginAsAdmin('dev');
         cy.url().should('include',"/campaigns");
         cy.contains('span', "New Campaign");
         cy.get('#campaigns-new-button').should('exist');
@@ -71,7 +71,7 @@ describe('New Campaign Form Test', function() {
 
     })
     it('Test New Campaign Form Save Button Display As External User', function() {
-        cy.loginAsExternal();
+        cy.loginAsExternal('dev');
         cy.url().should('include',"/campaigns");
         cy.contains('span', "New Campaign");
         cy.get('#campaigns-new-button').should('exist');
@@ -91,13 +91,17 @@ describe('New Campaign Form Test', function() {
         cy.get('.app-dialog--header').should('not.exist');
     })
     it('Test Create New Campaign As Admin', function() {
-        cy.loginAsAdmin();
+        cy.loginAsAdmin('dev');
         cy.fillAdminForm(random);
         cy.validateNewCampaign(random);
     })
     it('Test Create New Campaign As External User', function() {
-        cy.loginAsExternal();
+        cy.loginAsExternal('dev');
         cy.fillExternalForm(random);
         cy.validateNewCampaign(random);
+    })
+    it('Check Create New Campaign Page As Analyst', function() {
+        cy.loginAsAnalyst('dev');
+        cy.checkAnalystForm();
     })
   })
