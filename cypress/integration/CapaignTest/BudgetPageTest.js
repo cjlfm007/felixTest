@@ -1,8 +1,8 @@
 describe('Campaign Budget Page Test', function() {
     const random = Math.floor((Math.random() * 10000) + 1);
-    it('Test Budget Page As External User With Single Story', function() {
-        cy.loginAsExternal('dev');
-        cy.fillExternalForm(random);
+    it.only('Test Budget Page As External User With Single Story', function() {
+        cy.loginAsExternal('qa');
+        cy.fillExternalFormQa(random);
         cy.validateNewCampaign(random);
         cy.addStory();
         cy.fillTarget();
@@ -19,8 +19,8 @@ describe('Campaign Budget Page Test', function() {
         cy.get('#budget-save-button').click();
     })
     it('Test Budget Page As Admin User With Single Story', function() {
-        cy.loginAsAdmin('dev');
-        cy.fillAdminForm(random);
+        cy.loginAsAdmin('qa');
+        cy.fillAdminFormQa(random);
         cy.validateNewCampaign(random);
         cy.addStory();
         cy.fillTarget();
@@ -36,11 +36,11 @@ describe('Campaign Budget Page Test', function() {
         cy.get('#budget-save-button').click();
     })
     it('Test Budget Page As Analyst User With Single Story', function() {
-        cy.loginAsAnalyst('dev');
+        cy.loginAsAnalyst('qa');
         cy.checkAnalystForm();
     })
-    it.only('Test Budget Page As Analyst User', function() {
-        cy.loginAsAnalyst('dev');
+    it('Test Budget Page As Analyst User', function() {
+        cy.loginAsAnalyst('qa');
         cy.url().should('include',"/campaigns");
         cy.server();
         cy.get('#search-input').type("test");
@@ -48,7 +48,8 @@ describe('Campaign Budget Page Test', function() {
         cy.get('tbody td:nth-child(2)').each((index,$list) => {
               if(index >= 2){
                   expect($list).to.contain('test');
-                  cy.wait(['@getCampaignResults']);
+                  cy.wait(['@getCampaignResults'],{timeout: 10000});
+
               }
        });
        cy.get(':nth-child(1) > :nth-child(2) > app-reportviewer-link.ng-star-inserted > .ng-star-inserted').click();

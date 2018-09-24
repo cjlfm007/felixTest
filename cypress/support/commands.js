@@ -79,13 +79,26 @@ Cypress.Commands.add('fillAdminForm', (random) => {
     cy.get('#settings-save-button').click();
     cy.wait(['@postNewCampaign']);
 })
-Cypress.Commands.add('fillExternalForm', (random) => {
+Cypress.Commands.add('fillExternalFormDev', (random) => {
     cy.get('#campaigns-new-button').click();
     cy.get('#settings-name-input').type("Test Campaign " + random);
     cy.get('#settings-objective-select').click();
     cy.get('.mat-option-text:first').click();
     cy.get('#settings-account-select').click();
     cy.get('.mat-option-text').contains('Test Customer (1488837880342)').click();
+    cy.get('#settings-brandName-input').type('test brand');
+    cy.server();
+    cy.route('POST','**/campaigns/?isDraft=true').as('postNewCampaign');
+    cy.get('#settings-save-button').click();
+    cy.wait(['@postNewCampaign']);
+})
+Cypress.Commands.add('fillExternalFormQa', (random) => {
+    cy.get('#campaigns-new-button').click();
+    cy.get('#settings-name-input').type("Test Campaign " + random);
+    cy.get('#settings-objective-select').click();
+    cy.get('.mat-option-text:first').click();
+    cy.get('#settings-account-select').click();
+    cy.get('.mat-option-text').contains('test customer1').click();
     cy.get('#settings-brandName-input').type('test brand');
     cy.server();
     cy.route('POST','**/campaigns/?isDraft=true').as('postNewCampaign');

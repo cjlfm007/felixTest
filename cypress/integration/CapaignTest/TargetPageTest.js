@@ -1,7 +1,7 @@
 describe('Campaign Target Test', function() {
     const random = Math.floor((Math.random() * 10000) + 1);
     it('Check Target Page As External User', function() {
-        cy.loginAsExternal('dev');
+        cy.loginAsExternal('qa');
         cy.fillExternalForm(random);
         cy.validateNewCampaign(random);
         cy.addStory();
@@ -73,7 +73,7 @@ describe('Campaign Target Test', function() {
         
     })
     it('Check Target Page As Analyst User', function() {
-        cy.loginAsAdmin('dev');
+        cy.loginAsAdmin('qa');
         cy.fillExternalForm(random);
         cy.validateNewCampaign(random);
         cy.addStory();

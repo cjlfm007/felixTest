@@ -1,11 +1,11 @@
 describe('Home Page Test', function() {
     it('Test if input display correctly', function(){
-        cy.loginAsAdmin('dev');
+        cy.loginAsAdmin('qa');
         cy.get('#search-input').type("test input").should('have.value','test input');
 
     });
     it.only('Test if search results contain keyword', function() {
-      cy.loginAsAdmin('dev');
+      cy.loginAsAdmin('qa');
       cy.url().should('include',"/campaigns");
       cy.get('#search-input').type("test 09");
       cy.get('tbody td:nth-child(2)').each((index,$list) => {
@@ -15,7 +15,7 @@ describe('Home Page Test', function() {
      });
     })
     it('Test if Campaign Status filter works correctly', function() {
-        cy.loginAsAdmin('dev');
+        cy.loginAsAdmin('qa');
         cy.url().should('include',"/campaigns");
         cy.contains('thead td','Campaign Status').invoke('index').then((id) => {
             cy.log('id', id);

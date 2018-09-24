@@ -1,7 +1,7 @@
 describe('Campaign Content Test', function() {
     const random = Math.floor((Math.random() * 10000) + 1);
     it('Check New Singal Story Content As External User', function() {
-        cy.loginAsExternal('dev');
+        cy.loginAsExternal('qa');
         cy.fillExternalForm(random);
         cy.validateNewCampaign(random);
         cy.get('#story-add-url-input').type('yahoo.com');
