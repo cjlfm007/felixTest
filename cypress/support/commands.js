@@ -54,12 +54,15 @@ const types = {
         }
     }
   }
-
+const accounts = {
+    'qa': 'test customer1',
+    'dev': 'Test Customer (1488837880342)' 
+}
 const envs = {
     'qa' : 'https://app-qa.inpwrd.net/',
     'dev': 'https://app-dev.inpwrd.net/'
 }  
-Cypress.Commands.add('fillAdminForm', (random) => {
+Cypress.Commands.add('fillAdminForm', (env,random) => {
     cy.server();
     cy.get('#campaigns-new-button').click();
     cy.get('#settings-name-input').type("Test Campaign " + random);
@@ -67,7 +70,7 @@ Cypress.Commands.add('fillAdminForm', (random) => {
     cy.get('.mat-option-text:first').click();
     cy.get('#settings-account-select').click();
     cy.route('GET','**/algos/*').as('getAlgo');
-    cy.get('.mat-option-text').contains('test customer1').click();
+    cy.get('.mat-option-text').contains(accounts[env]).click();
     cy.wait(['@getAlgo']);
     cy.get('#settings-optimizationAlgorithm-select').click();
     cy.get('.mat-option-text').contains('DYNCPE').click();
@@ -79,32 +82,20 @@ Cypress.Commands.add('fillAdminForm', (random) => {
     cy.get('#settings-save-button').click();
     cy.wait(['@postNewCampaign']);
 })
-Cypress.Commands.add('fillExternalFormDev', (random) => {
+Cypress.Commands.add('fillExternalForm', (env,random) => {
     cy.get('#campaigns-new-button').click();
     cy.get('#settings-name-input').type("Test Campaign " + random);
     cy.get('#settings-objective-select').click();
     cy.get('.mat-option-text:first').click();
     cy.get('#settings-account-select').click();
-    cy.get('.mat-option-text').contains('Test Customer (1488837880342)').click();
+    cy.get('.mat-option-text').contains(accounts[env]).click();
     cy.get('#settings-brandName-input').type('test brand');
     cy.server();
     cy.route('POST','**/campaigns/?isDraft=true').as('postNewCampaign');
     cy.get('#settings-save-button').click();
     cy.wait(['@postNewCampaign']);
 })
-Cypress.Commands.add('fillExternalFormQa', (random) => {
-    cy.get('#campaigns-new-button').click();
-    cy.get('#settings-name-input').type("Test Campaign " + random);
-    cy.get('#settings-objective-select').click();
-    cy.get('.mat-option-text:first').click();
-    cy.get('#settings-account-select').click();
-    cy.get('.mat-option-text').contains('test customer1').click();
-    cy.get('#settings-brandName-input').type('test brand');
-    cy.server();
-    cy.route('POST','**/campaigns/?isDraft=true').as('postNewCampaign');
-    cy.get('#settings-save-button').click();
-    cy.wait(['@postNewCampaign']);
-})
+
 Cypress.Commands.add('checkAnalystForm', () => {
     cy.get('#campaigns-new-button').should('not.exist');
 })

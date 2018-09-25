@@ -1,6 +1,6 @@
 describe('Campaign Budget Page Test', function() {
     const random = Math.floor((Math.random() * 10000) + 1);
-    it.only('Test Budget Page As External User With Single Story', function() {
+    it('Test Budget Page As External User With Single Story', function() {
         cy.loginAsExternal('qa');
         cy.fillExternalFormQa(random);
         cy.validateNewCampaign(random);
